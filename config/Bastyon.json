@@ -6,7 +6,7 @@
     "developapps" : [{
         "id" : "barteron.pocketnet.app",
         "version": "1.0.0",
-        "scope" : "test.barter.pocketnet.app",
+        "scope" : "localhost:8080",
         "cantdelete" : true,
         "name" : "Barteron",
 		"grantedPermissions" : ["account", "chat"]
