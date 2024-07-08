@@ -267,7 +267,7 @@ successCheck = function (p) {
 
 	var self = this,
 		el = p.el || $('body');
-	var _w = $(window);
+
 	var ch = null;
 
 
@@ -284,23 +284,23 @@ successCheck = function (p) {
 			"html": h
 		});
 
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 			el.append(ch);
 			ch.find('svg')[0].classList.add('animate')
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				ch.addClass('active')
 			})
 		})
 
 		setTimeout(function () {
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				ch.removeClass('active')
 			})
 
 			setTimeout(function () {
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					ch.remove()
 				})
 				
@@ -448,7 +448,7 @@ wnd = function (p) {
 			app.actions.offScroll(wnd);
 		}
 
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 
 			if (hiddenState.length) {
 				hiddenState.before(wnd)
@@ -499,7 +499,7 @@ wnd = function (p) {
 
 
 			setTimeout(function () {
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					wnd.addClass('sette')
 				})
 
@@ -507,7 +507,7 @@ wnd = function (p) {
 			}, 20)
 
 			setTimeout(function () {
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					if (wnd)
 						wnd.removeClass('asette')
 				})
@@ -523,7 +523,7 @@ wnd = function (p) {
 
 
 						setTimeout(function () {
-							window.requestAnimationFrame(() => {
+							window.rifticker.add(() => {
 
 
 								if (wnd)
@@ -771,7 +771,7 @@ wnd = function (p) {
 			delete app.events.resize[id]
 			delete app.events.scroll[id]
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				destroySwipable()
 
 				wnd.addClass('asette')
@@ -787,7 +787,7 @@ wnd = function (p) {
 			var cl = function () {
 				if (self.essenseDestroy) self.essenseDestroy(key)
 
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 
 					wnd.remove();
 
@@ -1675,7 +1675,8 @@ tooltip = function (p) {
 
 sitemessage = function (message, func, delay = 5000, p = {}) {
 
-	var m = "<div>" + message + "</div>"
+	
+	var m = "<div>" + clearStringXss(message) + "</div>"
 
 	if (p.action) {
 		m += '<div class="action"><button class="black">' + p.action.text + '</button></div>'
@@ -1699,7 +1700,7 @@ sitemessage = function (message, func, delay = 5000, p = {}) {
 
 		setTimeout(function () {
 
-			messageel.detach();
+			messageel.remove();
 
 			messageel = null
 
@@ -1786,7 +1787,7 @@ bgImagesClApply = function (el, src) {
 
 bgImagesClApplyTemplate = function (src) {
 
-	src = (src || "");
+	src = clearStringXss(src || "");
 	src = replaceArchiveInImage(src);
 
 	
@@ -1819,7 +1820,7 @@ bgImagesCl = function (el, p) {
 			var src = el.getAttribute('image')
 
 			if (!src || src == '*') {
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					el.setAttribute('imageloaded', 'true')
 				})
 				return Promise.resolve()
@@ -1840,7 +1841,9 @@ bgImagesCl = function (el, p) {
 			image.src = src
 
 			if (imagesLoadedCache[src]) {
+				window.rifticker.add(() => {
 				bgImagesClApply(el, src)
+				})
 				resolve()
 			}
 			else {
@@ -1848,7 +1851,7 @@ bgImagesCl = function (el, p) {
 
 					imagesLoadedCache[src] = true
 
-					window.requestAnimationFrame(() => {
+					window.rifticker.add(() => {
 
 						bgImagesClApply(el, src)
 
@@ -1861,9 +1864,9 @@ bgImagesCl = function (el, p) {
 
 
 			image.onerror = (e) => {
-				console.error(e)
+				console.error(src, e)
 
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					el.setAttribute('image', '*')
 				})
 
@@ -1890,7 +1893,7 @@ carousel = function (el, _items, _container) {
 	var currentscroll = 0
 	var currentitem = 0
 
-	window.requestAnimationFrame(() => {
+	window.rifticker.add(() => {
 		if (!container.hasClass('carousel')) container.addClass('carousel')
 
 		for (var i = 0; i < items.length; i++) {
@@ -1941,7 +1944,7 @@ carousel = function (el, _items, _container) {
 	}
 
 	var gotoslide = function (index) {
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 
 			container[0].scrollLeft = items[index].offsetLeft
 
@@ -1955,7 +1958,7 @@ carousel = function (el, _items, _container) {
 
 		currentscroll = el.scrollLeft
 
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 			var activeindex = findactive()
 
 			if (activeindex > -1) {
@@ -2067,7 +2070,7 @@ resizeFit = function (srcData, width, height, clbk, format) {
 
 		ctx.drawImage(imageObj, 0, 0, newWidth, newHeight);
 
-		var url = canvas.toDataURL("image/" + format, 0.75);
+		var url = canvas.toDataURL("image/" + format, 0.85);
 
 		$(canvas).remove();
 
@@ -2121,7 +2124,7 @@ resize = function (srcData, width, height, clbk, format) {
 
 		ctx.drawImage(imageObj, 0, 0, newWidth, newHeight);
 
-		var url = canvas.toDataURL("image/" + format, 0.75);
+		var url = canvas.toDataURL("image/" + format, 0.85);
 
 		$(canvas).remove();
 
@@ -3515,6 +3518,10 @@ ParametersLive = function (parameters, el, p) {
 							}
 						})
 
+						_el.find('.vc_inputWrapperClick').on(clickAction(), function () {
+							open()
+						})
+
 						_el.find('input').on('focus', function () {
 							$(this).select();
 						})
@@ -4739,8 +4746,11 @@ Parameter = function (p) {
 				if (self.format.right)
 					input += caret;
 
-				input += '<div class="vc_inputWrapper">';
+				input += '<div class="vc_inputWrapper '+(disabled ? 'vc_inputWrapperClick' : '')+'">';
 				input += '<input elementsid="vs_input" ' + disabled + '  type="text" value="' + displayValue + '" placeholder="' + self.placeholder + '">';
+				if(disabled){
+					input += '<div class="displaceholder"></div>'
+				}
 				input += '</div>';
 
 				if (!self.format.right)
@@ -6008,6 +6018,8 @@ _scrollToTop = function (to, el, time, offset) {
 
 	var ofssetObj = to.offset();
 
+	console.log('scr ofssetObj', ofssetObj)
+
 	if (ofssetObj) {
 		var scrollTop = ofssetObj.top + offset;
 
@@ -6018,6 +6030,8 @@ _scrollToTop = function (to, el, time, offset) {
 			catch (e) { }
 
 		}
+
+		console.log('scroll', scrollTop)
 
 		_scrollTop(scrollTop, el, time);
 	}
@@ -7394,7 +7408,7 @@ fastars = function (el) {
 mobsearch = function (el, p) {
 
 	if (p.mobileSearch && p.app) {
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 
 			el.html('<div class="mobsearch">' + (p.icon || p.placeholder) + '</div>')
 			el.find('div').on('click', function () {
@@ -7711,6 +7725,12 @@ search = function (el, p) {
 
 				}
 			}
+			else{
+				events.search(searchInput)
+				e.stopPropagation()
+				e.preventDefault()
+				return false
+			}
 
 		});
 
@@ -7735,13 +7755,13 @@ search = function (el, p) {
 			}, 300)*/
 		})
 
-		searchInput.on('keypress', function (e) {
+		/*searchInput.on('keypress', function (e) {
 
 			if ((e.keyCode || e.which) == 13) {
 				events.search(searchInput)
 			}
 
-		});
+		});*/
 
 		searchEl.find('.searchIconLabel').on('click', function () {
 
@@ -8307,7 +8327,7 @@ initUpload = function (p) {
 		var thisid = makeid()
 
 
-		window.requestAnimationFrame(() => {
+		window.rifticker.add(() => {
 
 			if (dark){
 				el.addClass('dark')

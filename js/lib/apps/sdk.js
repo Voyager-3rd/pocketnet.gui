@@ -41,12 +41,18 @@ var BastyonSdk = function(){
     var listeners = {}
     var currentState = (document.location.pathname + document.location.search).replace('/', '');
 
+    const popstateEventHandler = function() {
+        onChangeState()
+    }
+
+    window.addEventListener('popstate', popstateEventHandler);
+
     const onChangeState = (state, title, url, isReplace) => { 
 
         setTimeout(() => {
             var link = (document.location.pathname + document.location.search).replace('/', '');
 
-            if(currentState == link && isReplace) return
+            if(currentState == link) return
     
             currentState = link
 
@@ -54,7 +60,7 @@ var BastyonSdk = function(){
                 event : 'changestate',
                 data : {
                     value : currentState,
-                    replace : false
+                    replace : true
                 }
             })
         })
@@ -309,6 +315,15 @@ var BastyonSdk = function(){
         }
     }
 
+    self.fetch = function(url, data = {}){
+
+        return action('authFetch', {url, data}).catch(e => {
+            console.error(e)
+            return Promise.reject(e)
+        })
+
+    }
+
     self.helpers = {
         alert : function(message){
             return action('alert', {message})
@@ -399,4 +414,4 @@ var BastyonSdk = function(){
 
 
 if(typeof module != "undefined"){ module.exports = {BastyonSdk}; } 
-else { window.BastyonApps = BastyonSdk; }
+else { window.BastyonSdk = BastyonSdk; }

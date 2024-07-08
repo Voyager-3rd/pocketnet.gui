@@ -15,7 +15,7 @@ var comments = (function(){
 
 		var el = {}, txid, ed, currents = {}, caption, _in, top, eid, preview = false, listpreview = false, showedall = false, receiver;
 		var share = null
-		var authblock = false;
+		var authblock = false, setFocus = false;
 
 		var paginationcount = 25;
 
@@ -127,6 +127,8 @@ var comments = (function(){
 							return
 						}*/
 
+						if(setFocus || actions.findCurrentText()) return
+
 						renders.list(p)
 
 					}
@@ -141,11 +143,14 @@ var comments = (function(){
 							p.el = parent.find('.answers')
 
 						}
+						
 							
 						load.level(comment.parentid, function(comments){
 
 							p.comments = comments
 							p.add = comment.id
+
+							if(setFocus || actions.findCurrentText()) return
 	
 							renders.list(p, null, comment.parentid)
 	
@@ -164,6 +169,12 @@ var comments = (function(){
 		}
 
 		var actions = {
+
+			findCurrentText : function(){
+				return _.find(currents, (c) => {
+					return c.message.v
+				})
+			},
 
 			removeSending : function(wrapper){
 				setTimeout(() => {
@@ -493,13 +504,7 @@ var comments = (function(){
 					
 				})
 
-				var f = m; /*_.filter(m, function(f){
-					if(f.original.indexOf('data:image') > -1){
-						return true;
-					}
-				})
-*/
-				focusfixed = true;
+				var f = m;
 
 				self.nav.api.load({
 					open : true,
@@ -646,6 +651,7 @@ var comments = (function(){
 			removeForm : function(id){
 
 				delete areas[id]
+				delete currents[id]
 
 				el.c.find("#" + id + ' .answer').html('')
 				el.c.find("#" + id + ' .edit').html('')
@@ -709,6 +715,10 @@ var comments = (function(){
 							current.id = editid
 						}
 
+						var fxc = currents[id]
+
+						delete currents[id]
+
 						self.app.platform.sdk.comments.send(current, function(error, alias){
 
 							if(!editid && ed.send){
@@ -717,11 +727,13 @@ var comments = (function(){
 
 							if(!error){
 
-								delete currents[id]
+								
 
 								successCheck()
 							}
 							else{
+
+								delete currents[id]
 
 								if(error == 'actions_noinputs_wait') error = 'actions_noinputs_wait_comment'
 
@@ -730,7 +742,7 @@ var comments = (function(){
 
 							state.save()
 
-							window.requestAnimationFrame(() => {
+							window.rifticker.add(() => {
 								wrapper.find('.emojionearea-editor').blur();
 								actions.removeSending(wrapper)
 
@@ -743,7 +755,7 @@ var comments = (function(){
 										el : wrapper
 									})
 
-									window.requestAnimationFrame(() => {
+									window.rifticker.add(() => {
 
 										if (areas[id]) {
 											areas[id].setText('');
@@ -954,7 +966,7 @@ var comments = (function(){
 
 				if (show){
 
-					window.requestAnimationFrame(() => {
+					window.rifticker.add(() => {
 						c.addClass('showedreplies')
 						c.find('.repliesloaderWrapper').removeClass('hidden')
 					})
@@ -976,7 +988,7 @@ var comments = (function(){
 
 								renders.list(p, function(){
 
-									window.requestAnimationFrame(() => {
+									window.rifticker.add(() => {
 										c.find('.repliesloaderWrapper').addClass('hidden')
 									})
 	
@@ -1009,7 +1021,7 @@ var comments = (function(){
 
 					actions.removeForm(id)
 
-					window.requestAnimationFrame(() => {
+					window.rifticker.add(() => {
 						c.removeClass('showedreplies')
 						p.el.html('')
 					})
@@ -1127,7 +1139,7 @@ var comments = (function(){
 				showedall = false;
 				ed.showall = false;
 
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 
 					el.c.removeClass('showedall')	
 					el.c.addClass('listpreview')
@@ -1147,7 +1159,7 @@ var comments = (function(){
 
 				if (listpreview){
 
-					window.requestAnimationFrame(() => {
+					window.rifticker.add(() => {
 						el.preloader.removeClass('hidden')
 					})
 				
@@ -1156,7 +1168,7 @@ var comments = (function(){
 						if(e){
 							self.app.platform.errorHandler(e, true)
 
-							window.requestAnimationFrame(() => {
+							window.rifticker.add(() => {
 								el.preloader.addClass('hidden')
 
 							})
@@ -1179,7 +1191,7 @@ var comments = (function(){
 						p.inner = html
 
 						renders.list(p, function(){
-							window.requestAnimationFrame(() => {
+							window.rifticker.add(() => {
 								actions.showhideLabel()	
 								el.c.addClass('showedall')	
 								el.c.removeClass('listpreview')
@@ -1219,7 +1231,7 @@ var comments = (function(){
 					needtoshow = true
 				}
 
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					if (showedall){
 						if(!el.showall.hasClass('hidden'))
 							el.showall.addClass('hidden')
@@ -1340,7 +1352,6 @@ var comments = (function(){
 
 					setTimeout(() => {
 						self.app.blockscroll = false
-
 					}, 200)
 				}
 			}
@@ -1885,6 +1896,8 @@ var comments = (function(){
 					focus : function() {
 						// Scroll comment section to top of the screen
 
+						setFocus = true
+
 					
 						if(window.cordova){
 							setTimeout(() => {
@@ -1897,6 +1910,8 @@ var comments = (function(){
 					},
 
 					blur : function(){
+						setFocus = false
+
 					},
 
 					onLoad : function(c, d){
@@ -2033,17 +2048,20 @@ var comments = (function(){
 
 			})
 
-			actions.checkBanned(p).then((user) => {
-				if (user){
-
-					var info = self.psdk.userInfo.getShortForm(user.address)
-
-					if (info){
-						_p.el.find('.errormessage').removeClass('hidden').html(self.app.localization.e('commentBannedWarning', info.name))
-
+			setTimeout(() => {
+				actions.checkBanned(p).then((user) => {
+					if (user){
+	
+						var info = self.psdk.userInfo.getShortForm(user.address)
+	
+						if (info){
+							_p.el.find('.errormessage').removeClass('hidden').html(self.app.localization.e('commentBannedWarning', info.name))
+	
+						}
 					}
-				}
-			})
+				})
+			}, 500)
+			
 
 		}
 		
@@ -2187,7 +2205,7 @@ var comments = (function(){
 
 			limits : function(el, message){
 
-				var l = 1000 - message.length;
+				var l = 2000 - message.length;
 
 				el.find('.limits').removeClass('bad')
 
@@ -2601,7 +2619,7 @@ var comments = (function(){
 								
 
 								_p.el.find('.refresh-comments').on('click', (e) => {
-									window.requestAnimationFrame(() => {
+									window.rifticker.add(() => {
 										$(e.currentTarget).addClass('refreshing');
 									})
 									
@@ -2702,14 +2720,16 @@ var comments = (function(){
 			
 			}*/
 
-			self.app.platform.actionListeners[eid] = function({type, alias, status}){
+			self.app.psdk.updatelisteners[eid] = self.app.platform.actionListeners[eid] = function({type, alias, status}){
+
 
 				if(type == 'comment'){
 					var comment = alias
 
 					if (comment.postid == txid){
-						if(currents[comment.id]) return
 
+						if(currents[comment.id]) return 
+						
 						clbks.post(self.psdk.comment.get(comment.id) || comment, comment.optype)
 						
 					}
@@ -2718,7 +2738,6 @@ var comments = (function(){
 				if(type == 'cScore'){
 
 					var comment = self.psdk.comment.getclear(alias.comment.v)
-
 
 					if (comment){
 						if(comment.postid == txid){
@@ -2815,7 +2834,7 @@ var comments = (function(){
 
 					if(!el.c) return
 
-					window.requestAnimationFrame(() => {
+					window.rifticker.add(() => {
 						if(!el.preloader.hasClass('hidden'))
 							el.preloader.addClass('hidden')
 					})
@@ -3078,10 +3097,12 @@ var comments = (function(){
 				delete self.app.platform.ws.messages.cScore.clbks[eid]*/
 
 				delete self.app.platform.actionListeners[eid]
+				delete self.app.psdk.updatelisteners[eid]
 
 				authblock = false
 
 				share = null
+				setFocus = false
 
 				currentstate = {
 					reply : null,
@@ -3109,7 +3130,6 @@ var comments = (function(){
 
 				el = {};
 				ed = {};
-				
 
 				_in = null
 			},
@@ -3302,7 +3322,7 @@ var comments = (function(){
 
 		_.each(essenses, function(essense){
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				essense.destroy();
 			})
 

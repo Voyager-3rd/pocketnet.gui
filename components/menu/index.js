@@ -18,7 +18,7 @@ var menu = (function(){
 
 			var s = self.app.platform.sdk.newmaterials.storage
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 
 				if(!el.c) return
 				
@@ -77,7 +77,7 @@ var menu = (function(){
 
 			ah : function(el, c){
 
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					if (c > 0){
 						el.addClass('amountHave')
 					}
@@ -104,7 +104,6 @@ var menu = (function(){
 		var searchlickaction = function(link){
 			
 			var href = link.replace('https://', '').replace('http://', '').replace('bastyon://', '').replace('pocketnet/', '').replace('localhost/', '').replace('bastyon.com/', '').replace('pocketnet.app/', '')
-
 
 			var p = {
 				href : href,
@@ -271,7 +270,7 @@ var menu = (function(){
 
 					self.app.platform.sdk.registrations.clbks.menu = function(){
 
-						window.requestAnimationFrame(() => {
+						window.rifticker.add(() => {
 
 							if (!self.app.platform.sdk.registrations.showprivate()){
 								
@@ -309,9 +308,13 @@ var menu = (function(){
 
 							if(!m) return false
 							
-							var tpl = m.fastMessage(notification)
+							/*var tpl = m.fastMessage(notification)
 
-							if(!tpl) return false
+							if(!tpl) {
+								return false
+							}
+							else{
+							}*/
 
 
 							return true
@@ -419,7 +422,7 @@ var menu = (function(){
 
 					if (menusearch) {
 						menusearch.setactive(true)
-						window.requestAnimationFrame(() => {
+						window.rifticker.add(() => {
 							menusearch.focus()
 
 						})
@@ -553,7 +556,6 @@ var menu = (function(){
 
 								el.find('.gotopage').on('click', function(){
 									var r = $(this).attr('link')
-
 
 									searchlickaction(r)
 
@@ -710,12 +712,15 @@ var menu = (function(){
 
 								self.app.platform.sdk.search.get(value, 'users', null, 7, 0, function(r){
 
-									composeresult('user', r.data, r.count)
+									
 
+									composeresult('user', r.data, r.count)
+									//composeresult('address', frommap, frommap.length)
 
 									render(getresults(), value, clbk, {
 										counts : counts
 									})
+
 								}, 'pocketnet', true)
 
 								
@@ -735,7 +740,6 @@ var menu = (function(){
 										menusearch.focus()
 									}
 
-									
 
 									return
 								}
@@ -802,7 +806,7 @@ var menu = (function(){
 
 							active : function(a){
 
-								window.requestAnimationFrame(() => {
+								window.rifticker.add(() => {
 									if (a){
 										el.c.addClass('searchactive')
 									}
@@ -879,7 +883,7 @@ var menu = (function(){
 				init : function(el){
 					
 					var action = function(){
-						window.requestAnimationFrame(() => {
+						window.rifticker.add(() => {
 							if(!_.isEmpty(self.app.errors.state)){
 								el.removeClass('hidden')
 							}
@@ -958,7 +962,7 @@ var menu = (function(){
 
 						var c = 'good';
 
-						window.requestAnimationFrame(() => {
+						window.rifticker.add(() => {
 							el.removeClass('hidden')
 
 							if (add == 0){
@@ -974,14 +978,14 @@ var menu = (function(){
 										var number = Number(value + now).toFixed(8),
 											target = $(tween.elem);
 	
-										window.requestAnimationFrame(() => {
+										window.rifticker.add(() => {
 											target.text(self.app.platform.mp.coin(number));
 										})
 	
 									},
 	
 								}, rand(400, 1200), function(){
-									window.requestAnimationFrame(() => {
+									window.rifticker.add(() => {
 										el.removeClass(c)
 									})
 								});
@@ -991,9 +995,6 @@ var menu = (function(){
 					}
 
 					var setValue = function(){	
-						
-						
-						
 						var account = self.app.platform.actions.getCurrentAccount()
 
 						if(!account){
@@ -1027,7 +1028,6 @@ var menu = (function(){
 
 					self.app.platform.actions.clbk('change', 'menu', setValue)
 
-					//self.app.platform.sdk.node.transactions.clbks.menu = setValue;
 
 					setValue()
 					
@@ -1182,12 +1182,18 @@ var menu = (function(){
 
 				if(!p) p = {}
 
+				var frommap = _.map(_.filter(self.app.map, (m) => {
+					return m.insearch && value == m.href
+				}), (m) => {
+					return ":" + m.href
+				})
+
 				self.shell({
 					name :  'results',
 					data : {
 						results : results,
-						value : value,
-						counts : p.counts || {}
+						value : (frommap.length ? ":" : "") + value,
+						counts : p.counts || {},
 					},
 
 				}, function(_p){
@@ -1287,11 +1293,9 @@ var menu = (function(){
 
 				delete self.app.platform.actionListeners['menu']
 
-				//delete self.app.platform.sdk.node.transactions.clbks.menu
 
 				self.app.platform.actions.clbk('change', 'menu', null)
 
-				delete self.app.platform.ws.messages.event.clbks.menusave
 
 				delete self.app.platform.sdk.notifications.clbks.seen.menu
 				delete self.app.platform.sdk.notifications.clbks.added.menu
@@ -1344,7 +1348,7 @@ var menu = (function(){
 			},
 
 			showsearch : function(v){
-				window.requestAnimationFrame(() => {
+				window.rifticker.add(() => {
 					if (el.c){
 						if (v){
 							el.c.addClass('searchactive')
@@ -1395,7 +1399,7 @@ var menu = (function(){
 
 		_.each(essenses, function(essense){
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				essense.destroy();
 			})
 

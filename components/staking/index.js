@@ -610,7 +610,10 @@ var staking = (function(){
 
 			destroy : function(){
 				delete self.iclbks.mainstacking;
-				graph.destroy()
+				if (graph){
+					graph.destroy()
+				}
+				
 				graph = null
 				charts = {}
 				el = {};
@@ -653,7 +656,7 @@ var staking = (function(){
 
 		_.each(essenses, function(essense){
 
-			window.requestAnimationFrame(() => {
+			window.rifticker.add(() => {
 				essense.destroy();
 			})
 
