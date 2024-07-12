@@ -16,9 +16,8 @@
 		"version": "0.0.1",
 		"scope" : "localhost:8081",
 		"cantdelete" : true,
-		"name" : "Demo application",
-		"grantedPermissions" : ["account"],
-		"access" : ["PR7srzZt4EfcNb3s27grgmiG8aB9vYNV82"]
+		"name" : "Demo",
+		"grantedPermissions" : ["account", "notifications", "messaging", "payment", "sign", "camera", "gallery"]
 	}],
     "protocol" : "bastyon",
     "support" : "support@bastyon.com",
