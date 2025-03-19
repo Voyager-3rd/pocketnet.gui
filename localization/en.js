@@ -2063,6 +2063,7 @@ _l.downloadDesctApp = "Download "+appname+" for desktop"
 _l.downloadMobileApp = "Install Mobile Application"
 
 
+_l.easyNode_learnPkoin = "Learn more about PKOIN";
 _l.easyNode_e10000 = "Node"
 _l.easyNode_e10001 = "Download and install node"
 _l.easyNode_e10002 = ""+appname+" Node"
@@ -2774,6 +2775,7 @@ _l.updateNotifier_button2 = 'Maybe later...';
 _l.updateNotifier_stateStart = 'Starting...';
 _l.updateNotifier_stateDownload = 'Downloaded';
 _l.updateNotifier_stateError = 'Error occurred, stopping';
+_l.updateNotifier_availableSilent = "Update available"
 /** ↑ Component UpdateNotifier ↑ */
 
 _l.error408 = 'Error, connection problem'
@@ -2866,6 +2868,10 @@ _l.external_tTotal = "Account or wallet"
 _l.description = 'Description'
 _l.getqrcode = 'Show QR code'
 
+_l.stakelogo = 'WPKOIN'
+_l.stakewrap = "Buy via Metamask"
+_l.pkoin_stake_info = "Connect your wallet to Metamask and purchase WPKOIN"
+_l.stakewpkoin = "Buy WPKOIN via Metamask"
 
 _l.pkoin_application_info = "Buy via Swipelux mini-application"
 _l.buyswipelux = "Buy via Swipelux"
@@ -3209,3 +3215,10 @@ _l.setcoverquestionno = 'No'
 
 _l.hiddenCommentLabelLink = "The comment has been hidden because it contains a link to an external resource from a user with insufficient rating."
 _l.getpaidsubscription_paidsuccess_removecodition_text = "The author has disabled the ability to issue a privileged access to it. Therefore, previously posted materials for privileged subscribers are available free of charge to everyone."
+
+
+_l.buypkoinexchnage='Buy from an exchanger';
+_l.buypkoinexchnage_info='Buy peer-to-peer through mini-app';
+_l.buypkoinexchnagep2p='Buy via PKOIN Exchange';
+
+_l.appsdisclaimer='Every app is already a wallet for pcoin. Except for the IOS';

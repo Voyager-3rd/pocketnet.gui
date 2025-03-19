@@ -1863,7 +1863,7 @@ _l.invalidformat = "Неверный формат картинки. Разреш
 _l.downloadDesctApp = "Загрузить "+appname+" для персонального компьютера"
 _l.downloadMobileApp = "Установить мобильное приложение"
 
-
+_l.easyNode_learnPkoin = "Узнать больше о PKOIN";
 _l.easyNode_e10000 = "Нода"
 _l.easyNode_e10001 = "Скачать и установить Ноду"
 _l.easyNode_e10002 = "Нода "+appname+""
@@ -1936,7 +1936,6 @@ _l.downloadNode = "Скачать Ноду для Windows";
 _l.months = "месяцев";
 _l.year = "год";
 _l.stakingCalculator = "Калькулятор стейкинга - расчитайте, сколько вы можете заработать, используя Покеткоин (PKOIN) внутри Ноды";
-
 
 _l.easyNode_e2000 = "Защищайте Свободу Слова и ";
 _l.easyNode_e2000_1 = "Зарабатывайте ";
@@ -2574,6 +2573,7 @@ _l.updateNotifier_button2 = 'Позже...';
 _l.updateNotifier_stateStart = 'Начинаем...';
 _l.updateNotifier_stateDownload = 'Загружено';
 _l.updateNotifier_stateError = 'Произошла ошибка';
+_l.updateNotifier_availableSilent = "Доступно обновление"
 /** ↑ Component UpdateNotifier ↑ */
 _l.error408 = 'Ошибка, проблема с соединением'
 
@@ -2668,6 +2668,10 @@ _l.external_tTotal = "Аккаунт или кошелёк"
 _l.description = 'Описание'
 _l.getqrcode = 'Показать QR код'
 
+_l.stakelogo = "WPKOIN"
+_l.stakewrap = "Купить через Metamask"
+_l.pkoin_stake_info = "Подключить кошелек к Metamask и приобрести WPKOIN"
+_l.stakewpkoin = "Купить WPKOIN через Metamask"
 
 _l.pkoin_application_info = "Купить через миниприложение Swipelux"
 _l.buyswipelux = "Купить через Swipelux"
@@ -3017,3 +3021,9 @@ _l.setcoverquestionno = 'Нет'
 
 _l.hiddenCommentLabelLink = "Комментарий скрыт из-за того, что содержит ссылку на внешний ресурс от пользователя с недостаточным рейтингом"
 _l.getpaidsubscription_paidsuccess_removecodition_text = "Автор отключил возможность оформить привилегированную подпуску на него. Поэтому  размещенные ранее материалы для привилегированных подписчиков доступны беслатно для всех."
+
+_l.buypkoinexchnage='Купить у обменника';
+_l.buypkoinexchnage_info='Купить с рук в p2p обменнике через мини-приложение';
+_l.buypkoinexchnagep2p='Купить через PKOIN Exchange';
+_l.appsdisclaimer='Каждое приложение уже является кошельком для pkoin. За исключением приложения для IOS';
+
