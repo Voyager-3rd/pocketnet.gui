@@ -444,6 +444,16 @@ var BastyonSdk = function(settings = {}){
         }
     }
 
+    self.videos = {
+        opendialog : function(data){
+            return action('videos.opendialog', data)
+        },
+
+        remove : function(data){
+            return action('videos.remove', data)
+        },
+    }
+
     self.chat = {
         getOrCreateRoom : function({users, parameters}){
             return action('chat.getOrCreateRoom', {users, parameters}).then(room => {

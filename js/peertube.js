@@ -1099,8 +1099,15 @@ PeerTubePocketnet = function (app) {
 						rme.videoQuotaUsed = videoQuotaUsed 
 
 
-						rme.quotanow =  videoQuotaDaily - videoQuotaUsedDaily + VIDEO_QUOTA_CORRECTION
+						var videoQuotaNow = videoQuotaDaily - videoQuotaUsedDaily + VIDEO_QUOTA_CORRECTION
 						
+						const fileSizeMaxLimit = options?.fileSizeMaxLimit || 0;
+						if (fileSizeMaxLimit) {
+							videoQuotaNow = Math.min(videoQuotaNow, fileSizeMaxLimit);
+						}
+
+						rme.quotanow = videoQuotaNow;
+
 						//Math.min() 
 
 						if (!sizeNumbered || !videoQuotaDaily || !videoQuota) {
@@ -1109,9 +1116,8 @@ PeerTubePocketnet = function (app) {
 						}
 
 						if (
-							sizeNumbered + videoQuotaUsedDaily <
-							videoQuotaDaily + VIDEO_QUOTA_CORRECTION ||
-							videoQuotaDaily < 0
+							sizeNumbered < videoQuotaNow 
+							|| videoQuotaDaily < 0 && (!fileSizeMaxLimit || sizeNumbered <= fileSizeMaxLimit)
 							//   &&
 							// (sizeNumbered + videoQuotaUsed <
 							//   videoQuota + VIDEO_QUOTA_CORRECTION ||

@@ -789,7 +789,7 @@ var BastyonApps = function (app) {
                     margintop: document.documentElement.style.getPropertyValue('--app-margin-top') || document.documentElement.style.getPropertyValue('--app-margin-top-default') || '0px',
                     application: application.manifest,
                     project: project_config,
-                    transactionsApiVersion: 3
+                    transactionsApiVersion: 4
                 })
             }
         },
@@ -879,7 +879,7 @@ var BastyonApps = function (app) {
             action: function ({
                 data,
             }) {
-                self.nav.api.load({
+                app.nav.api.load({
                     open: true,
                     id: 'channel',
                     inWnd: true,
@@ -925,6 +925,67 @@ var BastyonApps = function (app) {
                     }))
 
                 }
+            }
+        },
+        videos: {
+            opendialog: {
+                authorization: true,
+                permissions: [],
+                parameters: [],
+
+                action: function ({
+                    data,
+                    application
+                }) {
+                    return new Promise((resolve, reject) => {
+
+                        var videoadded = function(link, name) {
+                            resolve({link, name})
+                        }
+    
+                        var closeexternal = function() {
+                            resolve()
+                        }
+
+                        app.nav.api.load({
+                            open : true,
+                            id : 'uploadpeertube',
+                            inWnd : true,
+                            allowHide: false,
+        
+                            history : false,
+        
+                            essenseData : {
+                                isAudio: false,
+                                currentLink : '',
+                                inLentaWindow : false,
+                                fileSizeMaxLimit: data?.fileSizeMaxLimit,
+                            },
+        
+                            clbk : function(p, element){
+                                element.addclbk('appsvideouploading', videoadded, 'added')
+                                element.addclbk('appsvideouploading', closeexternal, 'closed')
+                            }
+                        });
+    
+                    })
+
+                }
+            },
+
+            remove: {
+                authorization: true,
+                permissions: [],
+                parameters: [],
+
+                action: function ({
+                    data,
+                    application
+                }) {
+                    return app.peertubeHandler.api.videos.remove(data.url).then(r => {
+                        app.platform.sdk.videos.clearstorage(data.url);
+                    })
+                }                
             }
         },
 
@@ -1040,7 +1101,7 @@ var BastyonApps = function (app) {
                     application
                 }) {
 
-                    self.nav.api.load({
+                    app.nav.api.load({
                         open: true,
                         href: 'post?s=' + data.txid,
                         inWnd: true,
@@ -1063,7 +1124,12 @@ var BastyonApps = function (app) {
                     data,
                     application
                 }) {
-                    return app.platform.sdk.videos.info(data.urls)
+                    const items = data.urls || [];
+                    return app.platform.sdk.videos.info(items).then(() => {
+                        return items.map(m => app.platform.sdk.videos.storage[m]);
+                    }).catch(e => {
+                        return Promise.reject(appsError(e));
+                    });
                 }
             }
         }

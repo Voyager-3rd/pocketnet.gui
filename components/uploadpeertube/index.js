@@ -21,6 +21,8 @@ var uploadpeertube = (function () {
 
 		var uploader, uploading = false, cancel = null, hasAccess = false;
 
+		var fileSizeMaxLimit = p?.essenseData?.fileSizeMaxLimit || 0;
+
 
 		/*var events = {
 			validateFile: (file) =>
@@ -88,7 +90,8 @@ var uploadpeertube = (function () {
 
 		var actions = {
 			getQuota : function(){
-				return self.app.peertubeHandler.api.videos.checkQuota().then((rme) => {
+				const options = { fileSizeMaxLimit };
+				return self.app.peertubeHandler.api.videos.checkQuota(0, options).then((rme) => {
 					
 					return Promise.resolve(rme)
 				}).catch(e => {
@@ -321,6 +324,13 @@ var uploadpeertube = (function () {
 				if (videoFile.size > 4 * 1024 * 1024 * 1024) {
 
 					showerror('videoSizeError')
+
+					return;
+				}
+
+				if (fileSizeMaxLimit && videoFile.size > fileSizeMaxLimit) {
+
+					showerror('videoSizeMaxLimitError')
 
 					return;
 				}
@@ -884,7 +894,7 @@ var uploadpeertube = (function () {
 				offScroll: true,
 				noInnerScroll: true,
 				class: 'uploadpeertube normalizedmobile showbetter',
-				allowHide: true,
+				allowHide: p.allowHide ?? true,
 				noCloseButton: true,
 				noButtons: true,
 				swipeClose: true,

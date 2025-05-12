@@ -1307,6 +1307,7 @@ _l.videoQualityInfo = "Maximum allowed video bitrate  - 8 Mbit/s. If your file e
 _l.videoQualityCaption = "Video quality limitations"
 _l.videoFormats = "List of supported video formats: .mp4, .mkv, .mov, .avi, .wmv, .flv, .f4v, .3g2, .3gp, .mts, .m2ts, .mxf, .nut"
 _l.videoSizeError = "Selected video file exceeds the limit of 4 Gb per video. Please compress it or select another one."
+_l.videoSizeMaxLimitError = "Selected video exceeds the maximum size limit"
 _l.videoSizeAtt = "Maximum allowed file size: 4 Gb."
 _l.videoFormatError = "Incorrect video format";
 _l.videoSelectError = "No video selected";
