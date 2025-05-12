@@ -1125,7 +1125,8 @@ var BastyonApps = function (app) {
                     application
                 }) {
                     const items = data.urls || [];
-                    return app.platform.sdk.videos.info(items).then(() => {
+                    const update = data.update;
+                    return app.platform.sdk.videos.info(items, update).then(() => {
                         return items.map(m => app.platform.sdk.videos.storage[m]);
                     }).catch(e => {
                         return Promise.reject(appsError(e));

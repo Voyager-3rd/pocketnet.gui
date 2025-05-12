@@ -324,8 +324,12 @@ var BastyonSdk = function(settings = {}){
     }
 
     self.get = {
-        videos : function(urls){
-            return action('get.videos', {urls})
+        videos : function(urls, update = false){
+            const data = {
+                urls, 
+                update
+            };
+            return action('get.videos', data)
         },
         account : function(){
             return action('account', {})
