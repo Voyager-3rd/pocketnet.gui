@@ -951,7 +951,7 @@ var BastyonApps = function (app) {
                             open : true,
                             id : 'uploadpeertube',
                             inWnd : true,
-                            allowHide: false,
+                            allowHide: true,
         
                             history : false,
         
