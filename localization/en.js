@@ -85,6 +85,7 @@ _l.next = "Next";
 _l.welcome = "Welcome";
 _l.welcometopocketnet = "Welcome to "+appname+"";
 _l.continue = "continue";
+_l.continuewithbarteron="Continue with Barteron"
 
 _l.chooseThemes = "Choose interesting themes";
 _l.bloggers = "Bloggers";
@@ -3016,7 +3017,7 @@ _l.miniApp_saveButton = "Save";
 _l.miniApp_cancelButton = "Cancel";
 
 
-_l.miniApp_importManifestError = "Manifest import error. This can occur if the `b_manifest.json` file is missing, corrupted, or has an invalid JSON format.";
+_l.miniApp_importManifestError = "Manifest import error. Make sure the b_manifest.json file exists and contains valid JSON. Ensure the server provides the necessary CORS headers and that the HTTPS connection is not blocked by an untrusted certificate (approve it in the browser if needed).";
 _l.miniApp_importIconError = "Application icon import error. This can occur if the `b_icon.png` file is missing or inaccessible.";
 _l.miniApp_brokenManifestError = "Manifest import error on the specified domain. Check the existence and correctness of the `b_manifest.json` file. If HTTPS with a self-signed certificate is used, allow access in your browser.";
 _l.miniApp_brokenPermissionsError = "Invalid or empty permissions in the manifest. Ensure the permissions are specified correctly.";
@@ -3243,3 +3244,6 @@ _l.buypkoinexchnage_info='Buy peer-to-peer through mini-app';
 _l.buypkoinexchnagep2p='Buy via PKOIN Exchange';
 
 _l.appsdisclaimer='Every app is already a wallet for pcoin. Except for the IOS';
+
+_l.BarteronOffer = "Barteron - 0% commission"
+_l.windows7 = "Download for Windows 7"

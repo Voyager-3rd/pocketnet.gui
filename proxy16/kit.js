@@ -7,7 +7,6 @@ var tcpPortUsed = require('tcp-port-used');
 _ = 	require("underscore");
 var fs = require('fs');
 
-
 var Pocketnet = require('./pocketnet.js');
 var Logger = require('./logger.js');
 const { base64encode, base64decode } = require('nodejs-base64');
@@ -258,11 +257,11 @@ var defaultSettings = {
 
 	firebase : {
 		key : "",
-		dbpath : 'data/firebase',
+		dbpath : 'data/firebase_a',
 		id : ''
 	},
 	miniapp : {
-		dbpath : 'data/firebase',
+		dbpath : 'data/firebase_ma',
 	},
 	wallet : {
 		dbpath : 'data/wallet',

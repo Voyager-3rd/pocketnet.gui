@@ -637,30 +637,6 @@ var BastyonApps = function (app) {
                 application
             }) {
 
-                //url, sharing {images, }, embeding
-                /*
-
-                    {
-                        url : string,
-                        sharing : {
-                            image : '', //url
-							images : [], //base64
-							title : '', 
-							html : {
-								body : '',
-								preview : ''
-							},
-
-							text : {
-								body : '',
-								preview : ''
-							}
-                        }
-                    }
-
-                */
-
-
                 if (!data.url) data.withouturl = true
                 if (data.url) data.url = findAndReplaceLinkClear(data.url)
 
@@ -1098,7 +1074,8 @@ var BastyonApps = function (app) {
         },
         locale: {},
         theme: {},
-        changestate: {}
+        changestate: {},
+        permissionchange: {}
     }
 
     var events = {
@@ -1211,8 +1188,12 @@ var BastyonApps = function (app) {
             return html
         })
     }
-    var resources = function (application, cached = {}) {
 
+    
+    var resources = function (application, cached = {}) {
+        var RESOURCE_TTL = 2 * 60 * 60 * 1000
+        var resourceTsKey = (appId, fileId) => 'res_ts_' + appId + '_' + fileId
+        
         if (allresources[application.id]) return Promise.resolve(allresources[application.id])
         if (getresources[application.id]) return getresources[application.id]
 
@@ -1230,8 +1211,14 @@ var BastyonApps = function (app) {
         promises = promises.concat(Promise.all(_.map(appfiles, (file) => {
 
             return new Promise((resolve, reject) => {
+                var useCached = file.cache && cached[file.id]
 
-                if (file.cache && cached[file.id]) {
+                if (useCached) {
+                    var ts = parseInt(localStorage[resourceTsKey(application.id, file.id)] || '0', 10)
+                    if (Date.now() - ts > RESOURCE_TTL) useCached = false
+                }
+                    
+                if (useCached) {
                     result[file.id] = cached[file.id]
                     result.fromcache[file.id] = true
                     resolve()
@@ -1240,6 +1227,8 @@ var BastyonApps = function (app) {
                         result[file.id] = data
 
                         delete result.fromcache[file.id]
+                        
+                        if (file.cache) localStorage[resourceTsKey(application.id, file.id)] = Date.now().toString()
 
                         resolve()
                     }).catch(reject)
@@ -1599,16 +1588,41 @@ var BastyonApps = function (app) {
             }
         })
     }
+    
+    var notifyPermissionChange = function ({
+        application,
+        permission,
+        state
+    }) {
+        const applicationId = application.manifest.id;
+        const notifyData = {
+            application: applicationId,
+            permission,
+            state
+        }
+
+        trigger('permissions:changed', notifyData);
+        emit(
+            'permissionchange', notifyData,
+            applicationId
+        );
+    }
 
     var givePermission = function (application, permission) {
         if (!this.clearPermission(application, permission)) return false
-
+    
         var appdata = localdata[application.manifest.id]
 
         if (!appdata) return false
 
         appdata.permissions.push({
             id: permission,
+            state: 'granted'
+        })
+
+        notifyPermissionChange({
+            application,
+            permission,
             state: 'granted'
         })
 
@@ -1633,6 +1647,12 @@ var BastyonApps = function (app) {
             return _permission.id != permission
         })
 
+        notifyPermissionChange({
+            application,
+            permission,
+            state: 'cleared'
+        })
+
         return true
     }
 
@@ -1648,6 +1668,12 @@ var BastyonApps = function (app) {
             state: 'forbid'
         })
 
+        notifyPermissionChange({
+            application,
+            permission,
+            state: 'forbid'
+        })
+
         savelocaldata()
 
         return true
@@ -1655,33 +1681,36 @@ var BastyonApps = function (app) {
     }
 
     var requestPermission = function(application, permission, data, p){
-        
-        if (application.manifest.permissions.indexOf(permission) == -1){
-            return Promise.reject(appsError('permission:notexistinmanifest:' + permission))
-        }
 
-        var meta = permissions[permission]
-        var appdata = localdata[application.manifest.id]
+    if (application.manifest.permissions.indexOf(permission) == -1){
+        return Promise.reject(appsError('permission:notexistinmanifest:' + permission))
+    }
 
-        if (!appdata) return Promise.reject(appsError('error:code:appdata'))
-        if (!meta) return Promise.reject(appsError('permission:missing'))
+    var meta = permissions[permission]
+    var appdata = localdata[application.manifest.id]
 
+    if (!appdata) return Promise.reject(appsError('error:code:appdata'))
+    if (!meta) return Promise.reject(appsError('permission:missing'))
 
-        if (checkPermission(application, permission)) return Promise.resolve()
-        if (checkPermission(application, permission, 'forbid')) return Promise.reject(appsError('permission:denied:' + permission + '/forbid'))
+    if (checkPermission(application, permission)) return Promise.resolve()
+    if (checkPermission(application, permission, 'forbid')) return Promise.reject(appsError('permission:denied:' + permission + '/forbid'))
 
+    if (meta.auto && !meta.uniq) {
+        appdata.permissions.push({
+            id: permission,
+            state: 'granted'
+        })
 
-        if (meta.auto && !meta.uniq) {
-            appdata.permissions.push({
-                id: permission,
-                state: 'granted'
-            })
+        savelocaldata()
 
-            savelocaldata()
+        notifyPermissionChange({
+            application,
+            permission,
+            state: 'granted'
+        })
 
-            return Promise.resolve()
-        }
-
+        return Promise.resolve()
+    }
 
         return requestPermissionForm(application, permission, data, p).then(state => {
 
@@ -1696,11 +1725,16 @@ var BastyonApps = function (app) {
                     savelocaldata()
                 }
 
+                notifyPermissionChange({
+                    application,
+                    permission,
+                    state: 'granted'
+                })
+
                 return Promise.resolve()
             }
 
             if (state == 'once') {
-                ///maybe temp array
                 return Promise.resolve()
             }
 
@@ -1711,16 +1745,17 @@ var BastyonApps = function (app) {
                 })
 
                 savelocaldata()
+
+                notifyPermissionChange({
+                    application,
+                    permission,
+                    state: 'forbid'
+                })
             }
 
             return Promise.reject(appsError('permission:denied:' + permission + '/' + state))
 
         })
-
-        ////resolve
-
-
-
     }
 
     var requestPermissions = function (application, permissions, data, p) {
@@ -1976,6 +2011,7 @@ var BastyonApps = function (app) {
     }
 
     self.init = function () {
+        window.addEventListener("message", listener)
 
         var promises = []
         const developApps = app.developapps || [];
@@ -2084,7 +2120,6 @@ var BastyonApps = function (app) {
 
             self.inited = true
 
-            window.addEventListener("message", listener)
 
         }).catch(e => {
             console.error(e)
@@ -2593,6 +2628,7 @@ var BastyonApps = function (app) {
     self.clearPermission = clearPermission
     self.install = install
     self.remove = remove
+    self.removeAppFromLocalhost = removeAppFromLocalhost
 
     return self
 }
