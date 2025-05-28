@@ -65,8 +65,33 @@ var complain = (function () {
 					gid: 6
 				}
 
-			]
-
+			],
+			miniapp_entity: [
+				{
+					name: self.app.localization.e('lowstar_reason_1'),
+					gid: 1
+				},
+				{
+					name: self.app.localization.e('lowstar_reason_2'),
+					gid: 2
+				},
+				{
+					name: self.app.localization.e('lowstar_reason_3'),
+					gid: 3
+				},
+				{
+					name: self.app.localization.e('lowstar_reason_4'),
+					gid: 4
+				},
+				{
+					name: self.app.localization.e('lowstar_reason_5'),
+					gid: 5
+				},
+				{
+					name: self.app.localization.e('lowstar_reason_6'),
+					gid: 6
+				}
+			],
 		}
 
 
@@ -188,6 +213,28 @@ var complain = (function () {
 							}
 
 						}
+					}
+
+					if (ess == 'miniapp_entity') {
+
+						try {
+							var i1 = ((actions.find(selected) || {}).name) || selected;
+							self.app.Logger.info({
+								actionId: 'MINIAPP_COMPLAIN',
+								actionValue: i1,
+								actionSubType: sobj.entityLink,
+								actionTxid: sobj.entityTxid,
+
+								active : true
+							});
+							clbk(true)
+							sitemessage(self.app.localization.e('complain_success'))
+						} catch (error) {
+							self.app.platform.errorHandler(error, true)
+
+							clbk(false)
+						}
+
 					}
 
 				})

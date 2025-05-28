@@ -525,6 +525,10 @@ var BastyonSdk = function(settings = {}){
         shareOnBastyon: function(data){
             self.helpers.share(data, { shareOnBastyon: true })
         },
+
+        complain: function(data){
+            return action("complain", data)
+        },
     }
 
     self.getroute = function(data){
