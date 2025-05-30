@@ -701,6 +701,7 @@ var BastyonApps = function (app) {
 						obj : {
                             entityLink: data.entityLink,
                             entityTxid: data.entityTxid,
+                            entityType: data.entityType,
                         },
 
 						success : function(){

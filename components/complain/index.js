@@ -10,6 +10,15 @@ var complain = (function () {
 
 		var el, ess, sobj, selected, ed, textreason;
 
+		var reasonIds = {
+			1: 'Erotic/Porn',
+			2: 'Child exploitation',
+			3: 'Direct threat of violence',
+			4: 'Illegal narcotics',
+			5: 'Copyrighted content',
+			6: 'Spam',
+		}
+
 		var reasons = {
 
 			post: [
@@ -102,6 +111,11 @@ var complain = (function () {
 				})
 			},
 
+			actionValue: function (id) {
+				var target = actions.find(id);
+				return reasonIds[target.gid] || id;
+			},
+
 			complain: function (clbk) {
 				self.app.platform.sdk.ustate.me(function (mestate) {
 
@@ -133,11 +147,9 @@ var complain = (function () {
 
 						else {
 							try {
-								var i1 = ((actions.find(selected) || {}).name) || selected;
-
 								self.app.Logger.info({
 									actionId: 'POST_COMPLAIN',
-									actionValue: i1,
+									actionValue: actions.actionValue(selected),
 									actionSubType: sobj.txid,
 
 									active : true
@@ -196,10 +208,9 @@ var complain = (function () {
 						else {
 
 							try {
-								var i1 = ((actions.find(selected) || {}).name) || selected;
 								self.app.Logger.info({
 									actionId: 'USER_COMPLAIN',
-									actionValue: i1,
+									actionValue: actions.actionValue(selected),
 									actionSubType: sobj.data.address,
 
 									active : true
@@ -218,12 +229,18 @@ var complain = (function () {
 					if (ess == 'miniapp_entity') {
 
 						try {
-							var i1 = ((actions.find(selected) || {}).name) || selected;
+							var actionSubType = JSON.stringify(
+								{
+									link: sobj.entityLink, 
+									txid: sobj.entityTxid,
+									type: sobj.entityType,
+								}
+							);
+
 							self.app.Logger.info({
 								actionId: 'MINIAPP_COMPLAIN',
-								actionValue: i1,
-								actionSubType: sobj.entityLink,
-								actionTxid: sobj.entityTxid,
+								actionValue: actions.actionValue(selected),
+								actionSubType,
 
 								active : true
 							});
