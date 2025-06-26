@@ -475,7 +475,6 @@ Platform = function (app, listofnodes) {
         'PWMSN4XByB3sKXrsBnmP9LPYFFBo2PUQ1R': true,
         'PDdwKn4ZNSMyeSyQ6F9zf4ttVd6jC1arvn': true,
         "PCZtNtn7b4m2BYYLNKiJGsquqQ4k5qSa45" : true,
-        "PU2BEjFmbEjAc9PnAcLZtJLQC3uqqAy3io" : true,
         "PBvEaZDUYmHzT6pZ3ByaUTyPajx2tgzp1k" : true,
         "PW1gF9Jm5TjqEdDT8mBNDBq2H7zh7CQDUp" : true,
         "PPhcg2DRQ9DQtEQHZ2KgNq7L75BK8hiueU" : true,
@@ -496,15 +495,18 @@ Platform = function (app, listofnodes) {
         "PSFC4gwWJ9rTnedFgSWdUVfdZhA9xda11c" : true,
         'PGrXFgpLYXVBgBPrhAeGRLnSpYE6Jwpt5Z': true,
         'PA2mkqDV1CU7ZHtneYVPMkB3u4WdzKz4t7': true,
-        'PNXh7Qnc1HpYjypyG2UjyHd3xZVbWPcszQ': true
+        'PNXh7Qnc1HpYjypyG2UjyHd3xZVbWPcszQ': true,
+        "PBjda5RoRHQWXP8WCXJKGweApvE3FMdS19" : true,
+        "PTu7bTiqv4dHbrCAPrXsFAEQVTrEY1AuvY" : true,
+        "P9xkH7FYTiBmKthEFexXPsaKAzhbYhs1uW" : true,
+        "PGuK3hjdHkdN4GytBvmus79htEW266yLMe" : true,
+        "PJzcsfPbvtpb4QDHrWkzgeXJ1oGZEaxmVc" : true
     }
 
     self.bch = {
-        'PK4qABXW7cGS4YTwHbKX99MsgMznYgGxBL': true
     }
 
     self.bchl = {
-        'PJTPfBQ6Q174s7WWcW41DwTdGrkGYQx5sJ': true
     }
 
     self.nvadr = {
@@ -4386,7 +4388,7 @@ Platform = function (app, listofnodes) {
                         description,
                         tags,
                         url,
-                        dontsave: (p.repost || p.videoLink || p.dontsave) ? true : false
+                        dontsave: (/*p.repost || */p.videoLink || p.dontsave) ? true : false
                     }
                 })
             }, 50)
@@ -17346,13 +17348,21 @@ Platform = function (app, listofnodes) {
     
                         return app.psdk.getfromtotransactions.request(() => {
     
-                            var nodes = ['135.181.196.243:38081', '65.21.56.203:38081']
     
-                            return self.app.api.rpc('getfromtotransactions', [from, to, self.currentBlock - 43200 * 12], {
+                            return self.app.api.rpc('getfromtotransactions', [from, to, self.currentBlock - 43200 * 12])
+
+                            /*
+                            
+                            var nodes = ['94.156.128.149:38081']
+    
+                            return self.app.api.rpc('getfromtotransactions', [from, to, self.currentBlock - 43200 * 12, ['a:subscription', 'a:donate']], {
                                 rpc: {
                                     fnode: nodes[rand(0, nodes.length - 1)]
                                 }
                             })
+                            
+                            
+                            */
         
                         }, from + to, {
                             update : update
