@@ -500,7 +500,13 @@ Platform = function (app, listofnodes) {
         "PTu7bTiqv4dHbrCAPrXsFAEQVTrEY1AuvY" : true,
         "P9xkH7FYTiBmKthEFexXPsaKAzhbYhs1uW" : true,
         "PGuK3hjdHkdN4GytBvmus79htEW266yLMe" : true,
-        "PJzcsfPbvtpb4QDHrWkzgeXJ1oGZEaxmVc" : true
+        "PJzcsfPbvtpb4QDHrWkzgeXJ1oGZEaxmVc" : true,
+        "PU2BEjFmbEjAc9PnAcLZtJLQC3uqqAy3io" : true,
+        "PGf7dNWLaKUfWCQm3fyyaY6zxPexKYALhF" : true,
+        "PC7VEMD1YyNr5uewxffVNV2KWLKvaLmnNE" : true,
+        "PV1ycXmbwbVwCvHqXQJC1wwbycvBa5YdTP" : true,
+        "PWk8tjyzyfGCPWb8VNUu9JQDHsnZ7EhkPK" : true,
+        "PNrKCz99vnaCoaGbvwEVwgmhsdKQfhUFEH" : true
     }
 
     self.bch = {
@@ -13963,6 +13969,110 @@ Platform = function (app, listofnodes) {
                             id: 'c18'
                         }
                     ],
+                    sr : [
+                        {
+                            "name": "Меме/Смешно",
+                            "tags": ["смешно", "меме"],
+                            "id": "c2"
+                        },
+                        {
+                            "name": "Политика",
+                            "tags": ["политика"],
+                            "id": "c3"
+                        },
+                        {
+                            "name": "Крипто",
+                            "tags": ["крипто"],
+                            "id": "c4"
+                        },
+                        {
+                            "name": "Технологија/Наука",
+                            "tags": ["технологија", "наука"],
+                            "id": "c5"
+                        },
+                        {
+                            "name": "Вера/Религија",
+                            "tags": ["вера", "религија"],
+                            "id": "c55"
+                        },
+                        {
+                            "name": "Инвестиције/Финансије",
+                            "tags": ["инвестиције", "финансије"],
+                            "id": "c6"
+                        },
+                        {
+                            "name": "PKOIN/peer-to-peer",
+                            "tags": ["pkoin_commerce"],
+                            "id": "c63",
+                            "new": "app.pkoindisable ? false : true"
+                        },
+                        {
+                            "name": "COVID/Закључавања",
+                            "tags": ["ковид", "закључавања"],
+                            "id": "c72"
+                        },
+                        {
+                            "name": "Ауто/Трке",
+                            "tags": ["ауто", "трке"],
+                            "id": "c7"
+                        },
+                        {
+                            "name": "Bastyon/Pocketnet",
+                            "tags": ["bastyon", "pocketnet"],
+                            "id": "c71"
+                        },
+                        {
+                            "name": "Спорт",
+                            "tags": ["спорт"],
+                            "id": "c8"
+                        },
+                        {
+                            "name": "Игре",
+                            "tags": ["игре"],
+                            "id": "c9"
+                        },
+                        {
+                            "name": "Уметност/Музика",
+                            "tags": ["уметност", "музика"],
+                            "id": "c11"
+                        },
+                        {
+                            "name": "Вести/Коментари",
+                            "tags": ["вести", "коментари"],
+                            "id": "c12"
+                        },
+                        {
+                            "name": "Историја",
+                            "tags": ["историја"],
+                            "id": "c13"
+                        },
+                        {
+                            "name": "Приче",
+                            "tags": ["прича"],
+                            "id": "c14"
+                        },
+                        {
+                            "name": "Филм/Анимација",
+                            "tags": ["филм", "анимација"],
+                            "id": "c15"
+                        },
+                        {
+                            "name": "Природа/Животиње",
+                            "tags": ["природа", "животиње"],
+                            "id": "c16"
+                        },
+                        {
+                            "name": "Путовања/Архитектура",
+                            "tags": ["путовања", "архитектура"],
+                            "id": "c17"
+                        },
+                        {
+                            "name": "Уради сам",
+                            "tags": ["уради_сам"],
+                            "id": "c18"
+                        }
+                    ],
+
                     cmn: [{
                             name: "模因/幽默",
                             tags: ['模因', '幽默'],
