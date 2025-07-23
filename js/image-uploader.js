@@ -128,6 +128,11 @@ ImageUploader = function(app) {
 
                     resolve(url)
                 }
+
+                p.fail = function(e){
+
+                    reject(e)
+                }
             }
 
             if (p.imgur){
@@ -137,6 +142,13 @@ ImageUploader = function(app) {
 
                     var url =  deep(data, 'data.link')
                     resolve(url)
+                }
+
+                p.fail = function(e){
+
+                    app.Logger.info({ actionId: "IMG_IMGUR_UPLOAD_FAILED" });
+
+                    reject(e)
                 }
             }
                 
