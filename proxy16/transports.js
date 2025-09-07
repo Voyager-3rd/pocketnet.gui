@@ -173,7 +173,7 @@ class WrappedAxios {
     }
 
     static handleError(error) {
-        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9051');
+        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9250');
         const isSocksRejection = error.message.includes('Socks5 proxy rejected connection');
 
         if (isConnRefused || isSocksRejection) {
@@ -310,7 +310,7 @@ class WrappedFetch {
     }
 
     static handleError(error) {
-        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9051');
+        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9250');
         const isSocksRejection = error.message.includes('Socks5 proxy rejected connection');
 
         if (isConnRefused || isSocksRejection) {
@@ -441,7 +441,7 @@ class WrappedRequest {
     }
 
     static handleError(error) {
-        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9051');
+        const isConnRefused = error.message.includes('ECONNREFUSED 127.0.0.1:9250');
         const isSocksRejection = error.message.includes('Socks5 proxy rejected connection');
 
         if (isConnRefused || isSocksRejection) {
@@ -465,6 +465,42 @@ class Transports {
     static waitTimeout = (seconds, orReturn) => new Promise((resolve) => {
         setTimeout(() => resolve(orReturn), seconds * 1000);
     });
+
+    static waitTimeoutFineGrained(seconds, orReturn) {
+        let timerId;
+        let settled = false;
+
+        const promise = new Promise(resolve => {
+            const target = Date.now() + seconds * 1000;
+
+            function check() {
+                if (settled) return;
+
+                const now = Date.now();
+                if (now >= target) {
+                    settled = true;
+                    resolve(orReturn);
+                } else {
+                    const remaining = target - now;
+                    const next = remaining > 5000 ? 5000
+                        : remaining > 1000 ? 1000
+                            : remaining;
+                    timerId = setTimeout(check, next);
+                }
+            }
+
+            timerId = setTimeout(check, Math.min(1000, seconds * 1000));
+        });
+
+        promise.cancel = () => {
+            if (!settled) {
+                settled = true;
+                clearTimeout(timerId);
+            }
+        };
+
+        return promise;
+    }
 
     async hasDirectAccess(url) {
         let { hostname, port, protocol } = new URL(url);
@@ -642,7 +678,7 @@ class Transports {
     }
 
     async waitTorReady() {
-        const timeout = Transports.waitTimeout(60 * 5, false);
+        const timeout = Transports.waitTimeoutFineGrained(60, false);
 
         let torStart;
 
@@ -672,7 +708,7 @@ class Transports {
 
     getTorAgent() {
         if (!this.torAgent) {
-            const url = new URL('socks5h://127.0.0.1:9051');
+            const url = new URL('socks5h://127.0.0.1:9250');
             url.tls = { rejectUnauthorized: false };
             this.torAgent = new SocksProxyAgent(url, {
                 keepAlive: true,
@@ -718,7 +754,7 @@ class Transports {
     }
 
     isTorRefuseConnections(error) {
-        return error.message.includes('ECONNREFUSED 127.0.0.1:9051');
+        return error.message.includes('ECONNREFUSED 127.0.0.1:9250');
     }
 }
 
