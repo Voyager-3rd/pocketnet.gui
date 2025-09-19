@@ -2339,6 +2339,7 @@ brtOffer = function(){
 	self.currencyPrice = {};
 	self.delivery = {};
 	self.videoSettings = {};
+	self.safeDeal = {};
 	self.price = 0;
 	self.published = 'published';
 
@@ -2368,7 +2369,8 @@ brtOffer = function(){
 						p: self.published,
 						f: self.currencyPrice,
 						d: self.delivery,
-						v: self.videoSettings
+						v: self.videoSettings,
+						s: self.safeDeal,
 					 }) +
 					 JSON.stringify(self.images) +
 					 self.geohash +
@@ -2393,6 +2395,7 @@ brtOffer = function(){
 				currencyPrice: self.currencyPrice,
 				delivery: self.delivery,
 				videoSettings: self.videoSettings,
+				safeDeal: self.safeDeal,
 				price: self.price,
 				published: self.published
 			};
@@ -2412,7 +2415,8 @@ brtOffer = function(){
 					p: self.published,
 					f: self.currencyPrice,
 					d: self.delivery,
-					v: self.videoSettings
+					v: self.videoSettings,
+					s: self.safeDeal,
 				}),
 				s5: JSON.stringify(self.images),
 				s6: self.geohash,
@@ -2437,6 +2441,7 @@ brtOffer = function(){
 		self.currencyPrice = d.currencyPrice;
 		self.delivery = d.delivery;
 		self.videoSettings = d.videoSettings;
+		self.safeDeal = d.safeDeal;
 		self.price = d.price;
 		self.published = d.published;
 	}

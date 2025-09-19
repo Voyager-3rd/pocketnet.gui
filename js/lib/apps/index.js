@@ -823,7 +823,7 @@ var BastyonApps = function (app) {
                     margintop: document.documentElement.style.getPropertyValue('--app-margin-top') || document.documentElement.style.getPropertyValue('--app-margin-top-default') || '0px',
                     application: application.manifest,
                     project: project_config,
-                    transactionsApiVersion: 4,
+                    transactionsApiVersion: 5,
                     alttransport : app.hasTor || false
                 })
             }
