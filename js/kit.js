@@ -2270,6 +2270,7 @@ brtAccount = function(){
 	self.geohash = '';
 	self.static = false;
 	self.radius = 0;
+	self.safeDeal = {};
 
 	self.validation = function(){
 
@@ -2281,7 +2282,8 @@ brtAccount = function(){
 						a: self.tags,
 						g: self.geohash,
 						s: self.static,
-						r: self.radius
+						r: self.radius,
+						d: self.safeDeal
 					 });
 	}
 
@@ -2292,7 +2294,8 @@ brtAccount = function(){
 				tags: self.tags,
 				geohash: self.geohash,
 				static: self.static,
-				radius: self.radius
+				radius: self.radius,
+				safeDeal: self.safeDeal
 			};
 		}
 
@@ -2303,7 +2306,8 @@ brtAccount = function(){
 					a: self.tags,
 					g: self.geohash,
 					s: self.static,
-					r: self.radius
+					r: self.radius,
+					d: self.safeDeal
 				})
 			}
 		};
@@ -2315,6 +2319,7 @@ brtAccount = function(){
 		self.geohash = d.geohash;
 		self.static = d.static;
 		self.radius = d.radius;
+		self.safeDeal = d.safeDeal;
 	}
 
 	self.type = 'brtaccount';
