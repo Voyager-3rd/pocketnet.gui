@@ -28,6 +28,7 @@
     <preference name="StatusBarStyle" value="lightcontent" />
     <preference name="AndroidLaunchMode" value="singleTask" />
     <preference name="Fullscreen" value="false" />
+    <preference name="AndroidEdgeToEdge" value="true" />
     <preference name="AllowInlineMediaPlayback" value="true"/>
     <preference name="AndroidExtraFilesystems" value="files-external,documents,sdcard,cache,cache-external,assets,root" />
     <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/splash/splash-screen-logo.xml" />
@@ -186,7 +187,6 @@
         <!--<edit-config file="AndroidManifest.xml" target="/manifest" mode="merge">
             <manifest xmlns:tools="http://schemas.android.com/tools" />
         </edit-config>-->
-
         <preference name="GradlePluginKotlinEnabled" value="true" />
         <preference name="GradlePluginKotlinVersion" value="2.1.0" />
 
