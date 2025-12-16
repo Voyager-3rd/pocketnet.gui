@@ -823,7 +823,7 @@ var BastyonApps = function (app) {
                     margintop: document.documentElement.style.getPropertyValue('--app-margin-top') || document.documentElement.style.getPropertyValue('--app-margin-top-default') || '0px',
                     application: application.manifest,
                     project: project_config,
-                    transactionsApiVersion: 6,
+                    transactionsApiVersion: 7,
                     alttransport : app.hasTor || false
                 })
             }
@@ -2220,9 +2220,9 @@ var BastyonApps = function (app) {
                                 return Promise.resolve()
                             }
                         } else {
-                            if (!application.store['g']) {
+                            /*if (!application.store['g']) {
                                 return Promise.resolve()
-                            }
+                            }*/
                         }
                     }
 
@@ -2574,6 +2574,7 @@ var BastyonApps = function (app) {
                 id: app.id || '',
                 status: this.appStatusById(app.id),
                 address: getFieldValue(app, 'address'),
+                installed: !!installed[app.id] || app.installed || false,
             });
         
             const matchesTags = (app, filterTags) => {
@@ -2676,9 +2677,9 @@ var BastyonApps = function (app) {
                                     return false
                                 }
                             } else {
-                                if (!dapp.store['g']) {
+                                /*if (!dapp.store['g']) {
                                     return false
-                                }
+                                }*/
                             }
                         }
 

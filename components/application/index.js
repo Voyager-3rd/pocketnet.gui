@@ -8,6 +8,8 @@ var application = (function(){
 
 		var primary = deep(p, 'history');
 
+		var inwnd = p.inWnd || false
+
 		var el, ed, application, appdata, curpath, userAddress, isUserAuthor, grantedPermissions, scores, userRating, comments, hasReviewsSupport;
 
 		var calculateRatingStats = function(scores) {
@@ -72,9 +74,7 @@ var application = (function(){
 			if (!comments || !comments.length) return []
 
 			return comments.filter(comment => !comment.deleted).map(function(comment) {
-				console.log(comment, 'comment')
 				var userInfo = self.psdk.userInfo.get(comment.address) || {}
-				console.log(userInfo, 'userInfo')
 				return {
 					userName: userInfo.name || 'Anonymous',
 					text: comment.message || '',
@@ -212,7 +212,7 @@ var application = (function(){
 			},
 			gotohome : function(){
 
-				if(self.container){
+				if(inwnd && self.container){
 					self.closeContainer()
 				}
 				else{
@@ -229,8 +229,6 @@ var application = (function(){
 				
 			},
 			openinfo : function(){
-
-				console.log('application', application)
 
 				app.nav.api.load({
                     open : true,
@@ -257,13 +255,70 @@ var application = (function(){
 						decoded = hexDecode(p)
 					}
 					catch(e){
-	
+
 					}
 				}
 
 				return decoded
 
 
+			},
+
+			showRatingPrompt: function() {
+				if (!application || !application.installed || !hasReviewsSupport) {
+					return;
+				}
+
+				if (userRating !== null && userRating !== undefined) {
+					return;
+				}
+
+				var appId = application.manifest.id;
+
+
+				if (localStorage['app_rated_modal_' + appId] === 'true') {
+					return;
+				}
+
+
+				var openCount = parseInt(localStorage['app_open_count_' + appId] || '0');
+				openCount++;
+				localStorage['app_open_count_' + appId] = openCount.toString();
+
+
+				var cancelCount = parseInt(localStorage['app_rating_cancel_count_' + appId] || '0');
+
+				var shouldShow = false;
+
+				if (cancelCount === 0 && openCount === 2) {
+					shouldShow = true;
+				}
+
+				else if (cancelCount > 0 && (openCount - 2) % 4 === 0) {
+					shouldShow = true;
+				}
+
+				if (!shouldShow) {
+					return;
+				}
+
+
+				new dialog({
+					html: self.app.localization.e('rateAppPromptMessage'),
+					btn1text: self.app.localization.e('rateAppButton'),
+					btn2text: self.app.localization.e('dcancel'),
+					class: 'ratingPromptDialog',
+
+					success: function() {
+						localStorage['app_rated_modal_' + appId] = 'true';
+						actions.openratingform();
+					},
+
+					fail: function() {
+						var currentCancelCount = parseInt(localStorage['app_rating_cancel_count_' + appId] || '0');
+						localStorage['app_rating_cancel_count_' + appId] = (currentCancelCount + 1).toString();
+					}
+				});
 			}
 		}
 
@@ -807,7 +862,12 @@ var application = (function(){
 
 					events.pageevents(p)
 
+					setTimeout(function() {
+						actions.showRatingPrompt();
+					}, 2000);
+
 					p.el.find('.back').on('click', function(){
+
 						if(self.app.electronview && history.length){
 							history.back()
 						}
@@ -948,11 +1008,14 @@ var application = (function(){
 			getdata : function(clbk, p){
 
 				ed = p.settings.essenseData || {}
+
+				if(!inwnd){
+					window.rifticker.add(() => {
+						self.app.el.html.addClass('allcontent_application')
+						self.app.mobile.reload.destroyparallax()
+					})
+				}
 				
-				window.rifticker.add(() => {
-					self.app.el.html.addClass('allcontent_application')
-					self.app.mobile.reload.destroyparallax()
-				})
 
 				var id = ed.application || parameters().id
 
@@ -961,7 +1024,7 @@ var application = (function(){
 				application = null
 				appdata = null
 
-      	userAddress = self.app.user.address.value;
+      			userAddress = self.app.user.address.value;
 				self.app.apps.get.application(id).then(async (f) => {
 					globalpreloader(true, true)
 					if (f){
@@ -1025,10 +1088,13 @@ var application = (function(){
 				ed = {}
 				el = {};
 
-				window.rifticker.add(() => {
-					self.app.el.html.removeClass('allcontent_application')
-					self.app.mobile.reload.initparallax()
-				})
+
+				if(!inwnd){
+					window.rifticker.add(() => {
+						self.app.el.html.removeClass('allcontent_application')
+						self.app.mobile.reload.initparallax()
+					})
+				}
 
 				self.app.apps.off('loaded', events.loaded)
 				self.app.apps.off('changestate', events.changestate)
@@ -1040,7 +1106,7 @@ var application = (function(){
 				self.app.apps.off('installed', events.installed)
 				self.app.apps.off('removed', events.removed)
 
-					delete self.app.platform.matrixchat.clbks.ALL_NOTIFICATIONS_COUNT.application
+				delete self.app.platform.matrixchat.clbks.ALL_NOTIFICATIONS_COUNT.application
 			},
 			
 			init : function(p){
