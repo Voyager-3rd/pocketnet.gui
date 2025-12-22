@@ -2579,9 +2579,13 @@ Application = function (p) {
 
 				if (window.cordova) {
 
+					if(typeof Keyboard != undefined){
+						Keyboard.adjustpan()
+					}
+
 					window.addEventListener('keyboardWillShow', (event) => {
 
-						var h = isios() ? event.keyboardHeight : Math.max(event.keyboardHeight, Math.min(260, window.innerHeight / 2))
+						var h = isios() ? event.keyboardHeight : Math.max(event.keyboardHeight, Math.min(303, window.innerHeight / 2))
 
 						self.mobile.keyboard.height = self.mobile.keyboard.lastheight = h
 
