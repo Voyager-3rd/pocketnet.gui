@@ -227,7 +227,7 @@ var defaultSettings = {
 	tor : {
 		dbpath2 : 'data/tordb',
 		path : 'data/tor',
-		enabled3: 'neweruse',
+		enabled3: 'neveruse',
 		useSnowFlake2 : false,
 		customObfs4 : false,
 	},
@@ -1436,6 +1436,15 @@ const kit = {
 
 		settings = state.expand(environmentDefaultSettings, settings)
 
+
+		if(typeof global.usecli != undefined && global.usecli){
+			if (settings.tor && settings.tor.enabled3){
+				settings.tor.enabled3 = 'neveruse'
+
+				console.log('nus')
+			}
+		}
+
 		db = new Datastore({
 			filename: f.path(settingsPath),
 		});
@@ -1468,11 +1477,18 @@ const kit = {
 
 			db.loadDatabase(function (err) {
 
-
 				if (!err) {
 					db.find({nedbkey: nedbkey}).exec(function (err, docs) {
 
 						var savedSettings = !err ? docs[0] || {} : {}
+
+						if(typeof global.usecli != undefined && global.usecli){
+							if (savedSettings.tor && savedSettings.tor.enabled3){
+								savedSettings.tor.enabled3 = 'neveruse'
+
+								console.log('nus2')
+							}
+						}
 
 						state.apply(state.expand(savedSettings, settings))
 
